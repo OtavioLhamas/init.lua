@@ -1,3 +1,5 @@
+require('neodev').setup()
+
 local lsp = require('lsp-zero')
 
 lsp.preset('recommended')
@@ -27,7 +29,7 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
   ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
   ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
   ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ["<C-Space>"] = cmp.mapping.complete(),
+  ['<C-Space>'] = cmp.mapping.complete(),
 })
 
 -- disable completion with tab
@@ -45,7 +47,7 @@ lsp.configure('omnisharp', {
   on_attach = function (_, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   end,
-  cmd = { 'C:\\Users\\otaviolhamas\\Downloads\\omnisharp-win-x64\\OmniSharp.exe', "--languageserver" , "--hostPID", tostring(pid) },
+  cmd = { os.getenv('UserProfile') .. '\\omnisharp-win-x64\\OmniSharp.exe', "--languageserver" , "--hostPID", tostring(pid) },
 })
 
 lsp.on_attach(function(client, bufnr)
@@ -63,17 +65,27 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, remap = false, desc = desc })
   end
 
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('K', vim.lsp.buf.hover, '')
-  nmap('<leader>vws', vim.lsp.buf.workspace_symbol, '')
-  nmap('<leader>vd', vim.diagnostic.open_float, '')
+  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('<leader>vd', vim.diagnostic.open_float, '[V]iew float [d]iagnostic window')
   nmap('[d', vim.diagnostic.goto_next, '')
   nmap(']d', vim.diagnostic.goto_prev, '')
-  nmap('<leader>vca', vim.lsp.buf.code_action, '')
-  nmap('<leader>vrr', vim.lsp.buf.references, '')
-  nmap('<leader>vrn', vim.lsp.buf.rename, '')
-  vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ctions')
+  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+
+  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help)
+
+  -- Lesser used LSP functionality
+  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+  nmap('<leader>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, '[W]orkspace [L]ist Folders')
+
+  -- Create a command `:Format` local to the LSP buffer
+  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+    vim.lsp.buf.format()
+  end, { desc = 'Format current buffer with LSP' })
+
 end)
 
 lsp.setup()
@@ -81,3 +93,6 @@ lsp.setup()
 vim.diagnostic.config({
     virtual_text = true,
 })
+
+require('fidget').setup()
+
