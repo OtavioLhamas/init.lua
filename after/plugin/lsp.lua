@@ -50,6 +50,14 @@ lsp.configure('omnisharp', {
   cmd = { os.getenv('UserProfile') .. '\\omnisharp-win-x64\\OmniSharp.exe', "--languageserver" , "--hostPID", tostring(pid) },
 })
 
+lsp.use('omnisharp', {
+  settings = {
+    omnisharp = {
+      enableImportCompletion = true,
+    }
+  }
+})
+
 lsp.on_attach(function(client, bufnr)
 
   if client.name == "eslint" then
