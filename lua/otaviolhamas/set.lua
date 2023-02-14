@@ -22,7 +22,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.opt.hlsearch = true
 
 -- Enable mouse mode
 vim.opt.mouse = 'a'
@@ -38,3 +38,12 @@ vim.opt.updatetime = 250
 vim.opt.signcolumn = 'yes'
 
 vim.opt.colorcolumn = '100'
+
+-- timeout controls which-key plugin
+vim.opt.timeout = true
+vim.opt.timeoutlen = 300
+
+vim.opt.foldcolumn = '0' -- '0' is not bad
+vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true

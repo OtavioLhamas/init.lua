@@ -1,45 +1,147 @@
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 local telescope = require('telescope')
-local builtin = require('telescope.builtin')
+local actions = require('telescope.actions')
 
-telescope.setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
+local pickers = {
+    find_files = {
+        theme = "dropdown",
+        hidden = true,
+        previewer = false,
     },
-  },
+    live_grep = {
+        --@usage don't include the filename in the search results
+        only_sort_text = true,
+        theme = "dropdown",
+    },
+    grep_string = {
+        only_sort_text = true,
+        theme = "dropdown",
+    },
+    buffers = {
+        theme = "dropdown",
+        previewer = false,
+        initial_mode = "normal",
+        mappings = {
+            i = {
+                ["<C-d>"] = actions.delete_buffer,
+            },
+            n = {
+                ["dd"] = actions.delete_buffer,
+            },
+        },
+    },
+    planets = {
+        show_pluto = true,
+        show_moon = true,
+    },
+    git_files = {
+        theme = "dropdown",
+        hidden = true,
+        previewer = false,
+        show_untracked = true,
+    },
+    lsp_references = {
+        theme = "dropdown",
+        initial_mode = "normal",
+    },
+    lsp_definitions = {
+        theme = "dropdown",
+        initial_mode = "normal",
+    },
+    lsp_declarations = {
+        theme = "dropdown",
+        initial_mode = "normal",
+    },
+    lsp_implementations = {
+        theme = "dropdown",
+        initial_mode = "normal",
+    },
 }
+
+local opts = {
+    theme = 'dropdown',
+    defaults = {
+        border = {},
+        borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        color_devicons = true,
+        dynamic_preview_title = true,
+        file_ignore_patterns = {},
+        initial_mode = 'insert',
+        layout_config = {
+            width = 0.75,
+            preview_cutoff = 120,
+            horizontal = {
+                preview_width = function(_, cols, _)
+                    if cols < 120 then
+                        return math.floor(cols * 0.5)
+                    end
+                    return math.floor(cols * 0.6)
+                end,
+                mirror = false,
+            },
+            vertical = { mirror = false },
+        },
+        layout_strategy = 'horizontal',
+        mappings = {
+            i = {
+                ['<C-j>'] = actions.cycle_history_next,
+                ['<C-k>'] = actions.cycle_history_prev,
+                ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+                ['<CR>'] = actions.select_default,
+            },
+            n = {
+                ['<C-n>'] = actions.move_selection_next,
+                ['<C-p>'] = actions.move_selection_previous,
+                ['<C-q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+                ['<C-c>'] = actions.close,
+            }
+        },
+        path_display = { 'smart' },
+        pickers = pickers,
+        selection_strategy = 'reset',
+        set_env = { ['COLORTERM'] = 'truecolor' },
+        sorting_strategy = 'descending',
+        vimgrep_arguments = {
+            'rg',
+            '--color=never',
+            '--no-heading',
+            '--with-filename',
+            '--line-number',
+            '--column',
+            '--smart-case',
+            '--hidden',
+            '--glob=!.git/',
+        },
+        winblend = 0,
+    },
+    pickers = pickers,
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = 'smart_case',
+        },
+    },
+}
+
+local previewers = require('telescope.previewers')
+local sorters = require('telescope.sorters')
+
+opts = vim.tbl_extend('keep', {
+        file_previewer = previewers.vim_buffer_cat.new,
+        grep_previewer = previewers.vim_buffer_vimgrep.new,
+        qflist_previewer = previewers.vim_buffer_qflist.new,
+        file_sorter = sorters.get_fuzzy_file,
+        generic_sorter = sorters.get_generic_fuzzy_sorter,
+    }, opts)
+
+telescope.setup(opts)
 
 -- Enable telescope fzf native, if installed
 pcall(telescope.load_extension, 'fzf')
 
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer]' })
+pcall(telescope.load_extension, 'harpoon')
+pcall(telescope.load_extension, 'projects')
 
-vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sp', builtin.git_files, { desc = '[S]earch Git [P]roject Files' })
-vim.keymap.set('n', '<leader>st', builtin.treesitter, { desc = '[S]earch [T]reesitter' })
-
-vim.keymap.set('n', 'gr', builtin.lsp_references, { desc = '[G]oto [R]eferences' })
-vim.keymap.set('n', 'gd', builtin.lsp_definitions, { desc = '[G]oto [D]efinition' })
-vim.keymap.set('n', 'gD', builtin.lsp_type_definitions, { desc = '[G]oto type [D]efinition' })
-vim.keymap.set('n', 'gI', builtin.lsp_implementations, { desc = '[G]oto [I]mplementation' })
-
-vim.keymap.set('n', '<leader>ds', builtin.lsp_document_symbols, { desc = '[D]ocument [S]ymbols' })
-vim.keymap.set('n', '<leader>ws', builtin.lsp_dynamic_workspace_symbols, { desc = '[W]orkspace [S]ymbols' })

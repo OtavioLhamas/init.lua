@@ -5,11 +5,11 @@ local lsp = require('lsp-zero')
 lsp.preset('recommended')
 
 lsp.ensure_installed({
-  'tsserver',
-  'eslint',
-  'sumneko_lua',
-  'rust_analyzer',
-  'omnisharp',
+    'tsserver',
+    'eslint',
+    'sumneko_lua',
+    'rust_analyzer',
+    'omnisharp',
 })
 
 -- Fix Undefined global 'vim'
@@ -24,76 +24,144 @@ lsp.configure('sumneko_lua', {
 })
 
 local cmp = require('cmp')
-local cmp_select = {behavior = cmp.SelectBehavior.Select}
-local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-  ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ['<C-Space>'] = cmp.mapping.complete(),
-})
-
--- disable completion with tab
--- this helps with copilot setup
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
+local luasnip = require('luasnip')
+local cmp_mapping = require('cmp.config.mapping')
 
 lsp.setup_nvim_cmp({
-  mapping = cmp_mappings
+    confirm_opts = {
+        behavior = cmp.ConfirmBehavior.Insert,
+    },
+    completion = {
+        keyword_length = 1,
+    },
+    formatting = {
+        fields = { "kind", "abbr", "menu" },
+        duplicates = {
+            buffer = 1,
+            path = 1,
+            nvim_lsp = 0,
+            luasnip = 1,
+        },
+        duplicates_default = 0,
+    },
+    mapping = lsp.defaults.cmp_mappings({
+        ['<C-k>'] = cmp_mapping(cmp_mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i', 'c' }),
+        ['<C-j>'] = cmp_mapping(cmp_mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i', 'c' }),
+        ['<C-p>'] = cmp_mapping(cmp_mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i', 'c' }),
+        ['<C-n>'] = cmp_mapping(cmp_mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i', 'c' }),
+        ['<Down>'] = cmp_mapping(cmp_mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
+        ['<Up>'] = cmp_mapping(cmp_mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
+        ['<C-u>'] = cmp_mapping.scroll_docs( -4),
+        ['<C-d>'] = cmp_mapping.scroll_docs(4),
+        ['<C-y>'] = cmp_mapping({
+            i = cmp_mapping.confirm { behavior = cmp.ConfirmBehavior.Insert, select = false },
+            c = function(fallback)
+                if cmp.visible() then
+                    cmp.confirm { behavior = cmp.ConfirmBehavior.Insert, select = false }
+                else
+                    fallback()
+                end
+            end,
+        }),
+        ['<Tab>'] = vim.NIL,
+        ['<S-Tab>'] = vim.NIL,
+        ['<C-Space>'] = cmp_mapping.complete(),
+        ['<C-e>'] = cmp_mapping.abort(),
+        ["<CR>"] = cmp_mapping(function(fallback)
+            if cmp.visible() then
+                local confirm_opts = { behavior = cmp.ConfirmBehavior.Replace, select = false } -- avoid mutating the original opts below
+                local is_insert_mode = function()
+                    return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
+                end
+                if is_insert_mode() then -- prevent overwriting brackets
+                    confirm_opts.behavior = cmp.ConfirmBehavior.Insert
+                end
+                if cmp.confirm(confirm_opts) then
+                    return -- success, exit early
+                end
+            end
+            fallback() -- if not exited early, always fallback
+        end),
+    }),
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    sources = {
+        {
+            name = "nvim_lsp",
+            entry_filter = function(entry, ctx)
+                local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
+                if kind == "Snippet" and ctx.prev_context.filetype == "java" then
+                    return false
+                end
+                if kind == "Text" then
+                    return false
+                end
+                return true
+            end,
+        },
+        { name = "path" },
+        { name = "luasnip" },
+        { name = "cmp_tabnine" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+        { name = "emoji" },
+        { name = "treesitter" },
+    },
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
 })
 
+cmp.setup.cmdline('/', {
+    sources = {
+        { name = 'buffer' },
+    },
+})
+
+cmp.setup.cmdline(':', {
+    sources = cmp.config.sources({
+        { name = 'path' }
+    }, {
+        {
+            name = 'cmdline',
+            option = {
+                ignore_cmds = { 'Man', '!' }
+            }
+        }
+    })
+})
 -- omnisharp lsp config
-lsp.configure('omnisharp', {
-  capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
-  on_attach = function (_, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  end,
-  cmd = { os.getenv('UserProfile') .. '\\omnisharp-win-x64\\OmniSharp.exe', "--languageserver" , "--hostPID", tostring(pid) },
-})
+-- lsp.configure('omnisharp', {
+--   capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+--   on_attach = function (_, bufnr)
+--     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+--   end,
+--   cmd = { os.getenv('UserProfile') .. '\\omnisharp-win-x64\\OmniSharp.exe', "--languageserver" , "--hostPID", tostring(pid) },
+-- })
 
-lsp.use('omnisharp', {
-  settings = {
-    omnisharp = {
-      enableImportCompletion = true,
-    }
-  }
-})
+-- lsp.use('omnisharp', {
+--   settings = {
+--     omnisharp = {
+--       enableImportCompletion = true,
+--     }
+--   }
+-- })
 
 lsp.on_attach(function(client, bufnr)
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true
+    }
 
-  if client.name == "eslint" then
-      vim.cmd.LspStop('eslint')
-      return
-  end
-
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
-    end
-
-    vim.keymap.set('n', keys, func, { buffer = bufnr, remap = false, desc = desc })
-  end
-
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<leader>vd', vim.diagnostic.open_float, '[V]iew float [d]iagnostic window')
-  nmap('[d', vim.diagnostic.goto_next, '')
-  nmap(']d', vim.diagnostic.goto_prev, '')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ctions')
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-  vim.keymap.set('i', '<C-h>', vim.lsp.buf.signature_help)
-
-  -- Lesser used LSP functionality
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
-
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
-
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
 end)
 
 lsp.setup()
