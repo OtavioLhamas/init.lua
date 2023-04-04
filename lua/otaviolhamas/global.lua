@@ -1,4 +1,5 @@
 local M = {}
+
 -- Common kill function for bdelete and bwipeout
 -- credits: based on bbye and nvim-bufdel
 ---@param kill_command? string defaults to "bd"
