@@ -61,27 +61,27 @@ require('packer').startup(function(use)
     use { 'lewis6991/gitsigns.nvim' }
 
     -- File navigation related plugins
-    use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } } -- Fuzzy Finder (files, lsp, etc)
+    use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }      -- Fuzzy Finder (files, lsp, etc)
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 } -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-    use { 'ahmedkhalf/project.nvim' } -- Project management
-    use { 'theprimeagen/harpoon' } -- Quickly mark and jump between files
+    use { 'ahmedkhalf/project.nvim' }                                                                      -- Project management
+    use { 'theprimeagen/harpoon' }                                                                         -- Quickly mark and jump between files
 
     -- Plugins to improve the editing experience
     use { 'lukas-reineke/indent-blankline.nvim' } -- Add indentation guides even on blank lines
-    use { 'numToStr/Comment.nvim' } -- "gc" to comment visual regions/lines
-    use { 'tpope/vim-sleuth' } -- Detect tabstop and shiftwidth automatically
-    use { 'windwp/nvim-autopairs' } -- Automatically pairs quotes, brackets, etc.
-    use { 'windwp/nvim-ts-autotag' } -- Autoclose and autorename for html tags
-    use { 'kylechui/nvim-surround', tag = '*', } -- Add surrounding characters to selection
-    use { 'mbbill/undotree' } -- Better undo history
+    use { 'numToStr/Comment.nvim' }               -- "gc" to comment visual regions/lines
+    use { 'tpope/vim-sleuth' }                    -- Detect tabstop and shiftwidth automatically
+    use { 'windwp/nvim-autopairs' }               -- Automatically pairs quotes, brackets, etc.
+    use { 'windwp/nvim-ts-autotag' }              -- Autoclose and autorename for html tags
+    use { 'kylechui/nvim-surround', tag = '*', }  -- Add surrounding characters to selection
+    use { 'mbbill/undotree' }                     -- Better undo history
     use {
-        'kevinhwang91/nvim-ufo', -- Line folding
+        'kevinhwang91/nvim-ufo',                  -- Line folding
         requires = {
             { 'kevinhwang91/promise-async' },
         },
     }
     use {
-        'ggandor/leap.nvim', -- Jump to position using 2-character search pattern
+        'ggandor/leap.nvim',       -- Jump to position using 2-character search pattern
         requires = {
             use 'tpope/vim-repeat' -- Plugin support for the . command
         }
@@ -93,17 +93,25 @@ require('packer').startup(function(use)
     -- Display possible key bindings
     use { 'folke/which-key.nvim' }
 
-    use { -- Fancier statusline
+    -- Fancier statusline
+    use {
         'nvim-lualine/lualine.nvim',
         requires = {
             use { 'nvim-tree/nvim-web-devicons' }, -- Adds icon support
             opt = true
         }
     }
+    -- Code context line
+    use {
+        "SmiteshP/nvim-navic",
+        requires = "neovim/nvim-lspconfig"
+    }
+    -- Display buffers like tabs
+    use { 'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons' }
 
     -- Themes
     use { 'navarasu/onedark.nvim' } -- Theme inspired by Atom
-    use { 'dracula/vim' } -- Another theme
+    use { 'dracula/vim' }           -- Another theme
     use { 'folke/tokyonight.nvim' } -- TOKYO!
 
     -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
