@@ -2,7 +2,7 @@ local which_key = require('which-key')
 
 which_key.setup({
     plugins = {
-        marks = false, -- shows a list of your marks on ' and `
+        marks = false,     -- shows a list of your marks on ' and `
         registers = false, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
         -- the presets plugin, adds help for a bunch of default keybindings in Neovim
         -- No actual key bindings are created
@@ -14,31 +14,71 @@ which_key.setup({
 })
 
 -- VISUAL leader mappings
-which_key.register(
-    {
+which_key.register({
         ['/'] = { '<Plug>(comment_toggle_linewise_visual)', 'Comment toggle' }
     },
     {
-        mode = 'v', -- VISUAL mode
+        mode = 'v',     -- VISUAL mode
         prefix = '<leader>',
-        buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-        silent = true, -- use `silent` when creating keymaps
+        buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
+        silent = true,  -- use `silent` when creating keymaps
         noremap = true, -- use `noremap` when creating keymaps
-        nowait = true, -- use `nowait` when creating keymaps
+        nowait = true,  -- use `nowait` when creating keymaps
     }
 )
 
 -- NORMAL leader mappings
-which_key.register(
+which_key.register({
+        ['c'] = { '<cmd>BufferKill bd 0 false<cr>', 'Close Buffer' },
+        ['k'] = { '<cmd>BufferKill bd 0 true<cr>', 'Kill Buffer' },
+        l = {
+            name = 'LSP',
+            a = { vim.lsp.buf.code_action(), 'Code Action' },
+            d = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Buffer diagnostics' },
+            D = { '<cmd>Telescope diagnostics<cr>', 'Diagnostics' },
+            f = { vim.lsp.buf.format, 'Format' },
+            j = {
+                vim.diagnostic.goto_next,
+                'Next Diagnostic',
+            },
+            k = { vim.diagnostic.goto_prev, 'Prev Diagnostic', },
+            l = { vim.lsp.codelens.run, "CodeLens Action" },
+            r = { vim.lsp.buf.rename, 'Rename' },
+            R = { '<cmd>LspRestart<cr>', 'Restart' }
+        },
+        p = {
+            name = 'Packer',
+            c = { '<cmd>PackerCompile<cr>', 'Compile' },
+            i = { '<cmd>PackerInstall<cr>', 'Install' },
+            s = { '<cmd>PackerSync<cr>', 'Sync' },
+            S = { '<cmd>PackerStatus<cr>', 'Status' },
+            u = { '<cmd>PackerUpdate<cr>', 'Update' },
+        },
+        v = {
+            name = 'Vim commands',
+            h = { '<cmd>nohlsearch<CR>', 'No Highlight' },
+            f = { '<cmd>Format<cr>', 'Format' },
+            q = { '<cmd>q<CR>', 'Quit' },
+            Q = { '<cmd>q!<CR>', 'Force quit' },
+            w = { '<cmd>w!<CR>', 'Save' },
+            W = { '<cmd>wa!<CR>', 'Save all' },
+        }
+    },
     {
-        ['/'] = { '<Plug>(comment_toggle_linewise_current)', 'Comment toggle' },
+        mode = 'n',     -- NORMAL mode
+        prefix = '<leader>',
+        buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
+        silent = true,  -- use `silent` when creating keymaps
+        noremap = true, -- use `noremap` when creating keymaps
+        nowait = true,  -- use `nowait` when creating keymaps
+    })
+
+-- NORMAL + VISUAL leader mappings
+which_key.register({
         [';'] = { '<cmd>Ex<cr>', 'Explore' },
-        ['c'] = { '<cmd>BufferKill<CR>', 'Close Buffer' },
-        ['h'] = { '<cmd>nohlsearch<CR>', 'No Highlight' },
-        ['w'] = { '<cmd>w!<CR>', 'Save' },
-        ['f'] = { '<cmd>Format<cr>', 'Format' },
         b = {
             name = 'Buffers',
+            c = { '<cmd>BufferKill bd 0 false<CR>', 'Close Buffer' },
             D = {
                 '<cmd>BufferLineSortByDirectory<cr>',
                 'Sort by directory',
@@ -49,6 +89,7 @@ which_key.register(
             },
             f = { '<cmd>Telescope buffers<cr>', 'Find' },
             h = { '<cmd>BufferLineCloseLeft<cr>', 'Close all to the left' },
+            k = { '<cmd>BufferKill bd 0 true<CR>', 'Kill Buffer' },
             j = { '<cmd>BufferLinePick<cr>', 'Jump' },
             L = {
                 '<cmd>BufferLineSortByExtension<cr>',
@@ -61,41 +102,8 @@ which_key.register(
             n = { '<cmd>BufferLineCycleNext<cr>', 'Next' },
             p = { '<cmd>BufferLineCyclePrev<cr>', 'Previous' },
         },
-        g = {
-            name = 'Git',
-            b = { '<cmd>lua require "gitsigns".blame_line()<cr>', 'Blame float' },
-            B = { '<cmd>Git blame<cr>', 'Blame' },
-            d = { '<cmd>Gdiffsplit<cr>', 'Diff' },
-            g = { '<cmd>G<cr>', 'Fugitive' },
-            l = { '<cmd>Gitsigns toggle_current_line_blame<cr>', 'Toggle inline blame' },
-        },
-        l = {
-            name = 'LSP',
-            a = { vim.lsp.buf.code_action(), 'Code Action' },
-            d = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Buffer diagnostics' },
-            D = { '<cmd>Telescope diagnostics<cr>', 'Diagnostics' },
-            f = { vim.lsp.buf.format, 'Format' },
-            j = {
-                vim.diagnostic.goto_next,
-                'Next Diagnostic',
-            },
-            k = {
-                vim.diagnostic.goto_prev,
-                'Prev Diagnostic',
-            },
-            l = { vim.lsp.codelens.run, "CodeLens Action" },
-            r = { vim.lsp.buf.rename, 'Rename' },
-        },
-        p = {
-            name = 'Packer',
-            c = { '<cmd>PackerCompile<cr>', 'Compile' },
-            i = { '<cmd>PackerInstall<cr>', 'Install' },
-            s = { '<cmd>PackerSync<cr>', 'Sync' },
-            S = { '<cmd>PackerStatus<cr>', 'Status' },
-            u = { '<cmd>PackerUpdate<cr>', 'Update' },
-        },
-        t = {
-            name = 'Telescope',
+        f = {
+            name = 'File/find Telescope',
             ['/'] = { '<cmd>Telescope current_buffer_fuzzy_find<cr>', 'Fuzzy search open buffer' },
             ['<space>'] = { '<cmd>Telescope buffers<cr>', 'Open buffers' },
             b = { '<cmd>Telescope git_branches<cr>', 'Checkout branch' },
@@ -115,19 +123,35 @@ which_key.register(
             t = { '<cmd>Telescope treesitter<cr>', 'Treesitter' },
             w = { '<cmd>Telescope grep_string<cr>', 'Current word' },
         },
+        g = {
+            name = 'Git',
+            b = { '<cmd>lua require "gitsigns".blame_line()<cr>', 'Blame float' },
+            B = { '<cmd>Git blame<cr>', 'Blame' },
+            d = { '<cmd>Gdiffsplit<cr>', 'Diff' },
+            g = { '<cmd>G<cr>', 'Fugitive' },
+            l = { '<cmd>Gitsigns toggle_current_line_blame<cr>', 'Toggle inline blame' },
+        },
+        ['<tab>'] = {
+            name = 'Tabs',
+            c = { '<cmd>tabclose<cr>', 'Close' },
+            f = { '<cmd>tabfirst<cr>', 'First' },
+            l = { '<cmd>tablast<cr>', 'Last' },
+            n = { '<cmd>tabnext<cr>', 'Next' },
+            p = { '<cmd>tabprevious<cr>', 'Previous' },
+            ['<tab>'] = { '<cmd>tabnew<cr>', 'New' },
+        }
     },
     {
-        mode = 'n', -- NORMAL mode
+        mode = { 'n', 'v' }, -- NORMAL + VISUAL mode
         prefix = '<leader>',
-        buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-        silent = true, -- use `silent` when creating keymaps
-        noremap = true, -- use `noremap` when creating keymaps
-        nowait = true, -- use `nowait` when creating keymaps
+        buffer = nil,        -- Global mappings. Specify a buffer number for buffer local mappings
+        silent = true,       -- use `silent` when creating keymaps
+        noremap = true,      -- use `noremap` when creating keymaps
+        nowait = true,       -- use `nowait` when creating keymaps
     })
 
 -- NORMAL mappings
-which_key.register(
-    {
+which_key.register({
         [']'] = {
             name = 'Next',
             d = {
@@ -185,5 +209,4 @@ which_key.register(
         silent = true,
         noremap = true,
         nowait = true,
-    }
-)
+    })
