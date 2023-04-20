@@ -117,6 +117,7 @@ which_key.register({
             H = { '<cmd>Telescope highlights<cr>', 'Highlight groups' },
             k = { '<cmd>Telescope keymaps<cr>', 'Keymaps' },
             p = { '<cmd>Telescope git_files<cr>', 'Git project' },
+            P = { '<cmd>Telescope projects<cr>', 'Git project' },
             r = { '<cmd>Telescope oldfiles<cr>', 'Recent Files' },
             s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document symbols' },
             S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace symbols' },
