@@ -199,7 +199,7 @@ which_key.register({
                 end,
                 'Line diagnostic'
             },
-            r = { '<cmd>lua require("telescope.builtin").lsp_references()<cr>', 'References' },
+            r = { '<cmd>Telescope lsp_references<cr>', 'References' },
             s = { vim.lsp.buf.signature_help, 'Signature help' },
         },
     },
