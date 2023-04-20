@@ -117,6 +117,7 @@ which_key.register({
             H = { '<cmd>Telescope highlights<cr>', 'Highlight groups' },
             k = { '<cmd>Telescope keymaps<cr>', 'Keymaps' },
             p = { '<cmd>Telescope git_files<cr>', 'Git project' },
+            P = { '<cmd>Telescope projects<cr>', 'Git project' },
             r = { '<cmd>Telescope oldfiles<cr>', 'Recent Files' },
             s = { '<cmd>Telescope lsp_document_symbols<cr>', 'Document symbols' },
             S = { '<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace symbols' },
@@ -130,6 +131,8 @@ which_key.register({
             d = { '<cmd>Gdiffsplit<cr>', 'Diff' },
             g = { '<cmd>G<cr>', 'Fugitive' },
             l = { '<cmd>Gitsigns toggle_current_line_blame<cr>', 'Toggle inline blame' },
+            n = { '<cmd>lua require "gitsigns".next_hunk()<cr>', 'Next hunk' },
+            p = { '<cmd>lua require "gitsigns".prev_hunk()<cr>', 'Previous hunk' },
         },
         ['<tab>'] = {
             name = 'Tabs',
