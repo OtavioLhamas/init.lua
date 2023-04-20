@@ -30,7 +30,21 @@ local pickers = {
     },
     grep_string = {
         only_sort_text = true,
-        theme = "dropdown",
+        layout_strategy = 'horizontal',
+        layout_config = {
+            height = function(_, _, max_lines)
+                local percentage = 0.75
+                local min = 30
+                return math.max(math.floor(percentage * max_lines), min)
+            end,
+            preview_cutoff = 1,
+            prompt_position = 'top',
+            width = function(_, max_columns, _)
+                local percentage = 0.75
+                local max = 140
+                return math.max(math.floor(percentage * max_columns), max)
+            end,
+        },
     },
     buffers = {
         theme = "dropdown",
@@ -56,7 +70,21 @@ local pickers = {
         show_untracked = true,
     },
     lsp_references = {
-        theme = "dropdown",
+        layout_strategy = 'horizontal',
+        layout_config = {
+            height = function(_, _, max_lines)
+                local percentage = 0.75
+                local min = 30
+                return math.max(math.floor(percentage * max_lines), min)
+            end,
+            preview_cutoff = 1,
+            prompt_position = 'top',
+            width = function(_, max_columns, _)
+                local percentage = 0.75
+                local max = 140
+                return math.max(math.floor(percentage * max_columns), max)
+            end,
+        },
         initial_mode = "normal",
     },
     lsp_definitions = {
