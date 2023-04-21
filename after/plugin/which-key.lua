@@ -75,7 +75,7 @@ which_key.register({
 
 -- NORMAL + VISUAL leader mappings
 which_key.register({
-        [';'] = { '<cmd>Ex<cr>', 'Explore' },
+        [';'] = { '<cmd>NvimTreeToggle<cr>', 'Explore' },
         b = {
             name = 'Buffers',
             c = { '<cmd>BufferKill bd 0 false<CR>', 'Close Buffer' },
@@ -106,9 +106,9 @@ which_key.register({
             name = 'File/find Telescope',
             ['/'] = { '<cmd>Telescope current_buffer_fuzzy_find<cr>', 'Fuzzy search open buffer' },
             ['<space>'] = { '<cmd>Telescope buffers<cr>', 'Open buffers' },
-            b = { '<cmd>Telescope git_branches<cr>', 'Checkout branch' },
+            c = { '<cmd>Telescope git_branches<cr>', 'Checkout branch' },
             C = { '<cmd>Telescope commands<cr>', 'Commands' },
-            d = { '<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>', 'Buffer diagnostics' },
+            d = { '<cmd>Telescope diagnostics bufnr=0<cr>', 'Buffer diagnostics' },
             D = { '<cmd>Telescope diagnostics<cr>', 'Diagnostics' },
             f = { '<cmd>Telescope find_files<cr>', 'Files' },
             g = { '<cmd>Telescope live_grep<cr>', 'Grep' },

@@ -63,6 +63,7 @@ require('packer').startup(function(use)
     -- File navigation related plugins
     use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }      -- Fuzzy Finder (files, lsp, etc)
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 } -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
+    use { 'nvim-tree/nvim-tree.lua' }
     use { 'ahmedkhalf/project.nvim' }                                                                      -- Project management
     use { 'theprimeagen/harpoon' }                                                                         -- Quickly mark and jump between files
 
