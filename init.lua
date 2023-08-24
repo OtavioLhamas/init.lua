@@ -1,1 +1,2 @@
-require('otaviolhamas')
+require('core.options')
+require('config')
