@@ -6,6 +6,7 @@ local lsp_settings = {}
 local lsp_onattach = {}
 local lsp_filetypes = {}
 local lsp_keys = {}
+local lsp_cmd = {}
 
 --#region lspconfig
 local lsp_servers = {
@@ -47,6 +48,33 @@ lsp_settings.lua_ls = {
 		},
 	},
 }
+--#endregion
+
+--#endregion
+
+--#region on attach
+
+--#region omnisharp
+lsp_onattach.omnisharp = function(_, bufnr)
+	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+end
+--#endregion
+
+--#endregion
+
+--#region cmd
+
+--#region omnisharp
+if vim.fn.has("windows") then
+
+	lsp_cmd.omnisharp = {
+		"dotnet",
+		os.getenv("LOCALAPPDATA") .. "\\nvim-data\\mason\\packages\\omnisharp\\libexec\\OmniSharp.dll",
+        "--languageserver",
+        "--hostPID",
+        tostring(vim.fn.getpid())
+	}
+end
 --#endregion
 
 --#endregion
@@ -147,7 +175,18 @@ local function server_setup(server)
 		settings = lsp_settings[server],
 		on_attach = lsp_onattach[server],
 		filetypes = lsp_filetypes[server],
+		cmd = lsp_cmd[server],
 	}
+
+    if server == "omnisharp" then
+        config.enable_editorconfig_support = true
+        config.enable_ms_build_load_projects_on_demand = false
+        config.enable_roslyn_analyzers = false
+        config.organize_imports_on_format = true
+        config.enable_import_completion = true
+        config.sdk_include_prereleases = true
+        config.analyze_open_documents_only = false
+    end
 
 	require("lspconfig")[server].setup(config)
 end

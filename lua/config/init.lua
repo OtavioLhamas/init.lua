@@ -15,6 +15,7 @@ local function load(name)
 		end,
 	})
 
+
 end
 
 load('config.keymaps')
