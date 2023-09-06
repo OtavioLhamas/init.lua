@@ -40,9 +40,16 @@ lsp_settings.lua_ls = {
 		diagnostics = {
 			globals = { "vim" },
 		},
-		workspace = {
-			checkThirdParty = false,
-		},
+        workspace = {
+            checkThirdParty = false,
+            library = {
+                [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+                [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+                [vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy"] = true,
+            },
+            maxPreload = 100000,
+            preloadFileSize = 10000,
+        },
 		completion = {
 			-- callSnippet = "Replace",
 		},
@@ -209,21 +216,21 @@ end
 
 --#region mason
 local mason_opts = {
-    log_level = vim.log.levels.INFO,
-    max_concurrent_installers = 4,
-    ui = {
-        border = {
-            thin.top_left,
-            thin.top,
-            thin.top_right,
-            thin.right,
-            thin.bottom_right,
-            thin.bottom,
-            thin.bottom_left,
-            thin.left,
-        },
-        height = 0.8,
-    },
+	log_level = vim.log.levels.INFO,
+	max_concurrent_installers = 4,
+	ui = {
+		border = {
+			thin.top_left,
+			thin.top,
+			thin.top_right,
+			thin.right,
+			thin.bottom_right,
+			thin.bottom,
+			thin.bottom_left,
+			thin.left,
+		},
+		height = 0.8,
+	},
 }
 --#endregion
 

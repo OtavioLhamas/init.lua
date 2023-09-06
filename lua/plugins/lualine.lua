@@ -100,9 +100,9 @@ local lualine_opts = function()
 				{
 					"diff",
 					symbols = {
-						added = icons.git.added,
-						modified = icons.git.modified,
-						removed = icons.git.removed,
+						added = icons.git.added .. ' ',
+						modified = icons.git.modified .. ' ',
+						removed = icons.git.removed .. ' ',
 					},
 				},
 			},
@@ -110,10 +110,10 @@ local lualine_opts = function()
 				{
 					"diagnostics",
 					symbols = {
-						error = icons.diagnostics.error,
-						warn = icons.diagnostics.warn,
-						info = icons.diagnostics.info,
-						hint = icons.diagnostics.hint,
+						error = icons.diagnostics.error .. ' ',
+						warn = icons.diagnostics.warn .. ' ',
+						info = icons.diagnostics.info .. ' ',
+						hint = icons.diagnostics.hint .. ' ',
 					},
 				},
 				{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
