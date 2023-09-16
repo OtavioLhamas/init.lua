@@ -674,7 +674,9 @@ return {
 			local telescope = require("telescope")
 			telescope.setup(telescope_opts())
 
-			telescope.load_extension("fzf")
+            if not vim.fn.has('windows') then
+                telescope.load_extension("fzf")
+            end
 			telescope.load_extension("undo")
 			telescope.load_extension("noice")
 			telescope.load_extension("notify")
