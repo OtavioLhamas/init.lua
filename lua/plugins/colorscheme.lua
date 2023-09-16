@@ -104,6 +104,97 @@ local monokai_opts = {
 }
 --#endregion
 
+--#region catppuccin
+local catppuccin_opts = {
+    flavour = "mocha",
+    background = {
+        light = "latte",
+        dark = "mocha",
+    },
+    highlight_overrides = {
+        mocha = function(mocha)
+            return {
+                LazyNormal = {
+                    bg = mocha.crust,
+                },
+
+                NoiceCmdlinePopup = {
+                    bg = mocha.mantle,
+                },
+                NoiceCmdlinePopupBorder = {
+                    bg = mocha.mantle,
+                    fg = mocha.overlay0
+                },
+                NoiceCmdlinePopupTitle = {
+                    fg = mocha.subtext1,
+                },
+
+                NoicePopup = {
+                    bg = mocha.mantle,
+                },
+                NoicePopupBorder = {
+                    bg = mocha.mantle,
+                    fg = mocha.overlay0,
+                },
+                NoicePopupTitle = {
+                    fg = mocha.subtext1
+                },
+
+                NotifyBackground = {
+                    bg = mocha.mantle,
+                },
+
+                NvimTreeNormal = {
+                    bg = mocha.mantle,
+                },
+
+                TelescopeNormal = {
+                    bg = mocha.crust,
+                },
+                TelescopeBorder = {
+                    bg = mocha.crust,
+                    fg = mocha.overlay0,
+                },
+                TelescopePromptTitle = {
+                    fg = mocha.subtext1,
+                },
+                TelescopeResultsNormal = {
+                    bg = mocha.base,
+                },
+                TelescopeResultsBorder = {
+                    bg = mocha.base,
+                    fg = mocha.overlay0,
+                },
+            }
+        end,
+    },
+    dim_inactive = {
+        enabled = false,
+        shade = "dark",
+        percentage = 0.15,
+    },
+    integrations = {
+        alpha = true,
+        cmp = true,
+        flash = true,
+        gitsigns = true,
+        nvimtree = false,
+        treesitter = true,
+        mason = true,
+        mini = true,
+        navic = { enabled = true, custom_bg = "NONE" },
+        noice = true,
+        notify = true,
+        telescope = { enabled = true },
+        trouble = false,
+        ufo = true,
+        which_key = true,
+    },
+    term_colors = true,
+    transparent_background = true,
+}
+--#endregion
+
 return {
 	-- tokyonight
 	{
@@ -117,8 +208,8 @@ return {
 				return
 			end
 
-			tokyonight.setup(tokyo_opts)
-			vim.cmd.colorscheme("tokyonight-night")
+			-- tokyonight.setup(tokyo_opts)
+			-- vim.cmd.colorscheme("tokyonight-night")
 		end,
 	},
 
@@ -134,7 +225,7 @@ return {
 				return
 			end
 
-			monokai.setup(monokai_opts)
+			-- monokai.setup(monokai_opts)
 			-- vim.cmd.colorscheme("monokai-pro")
 		end,
 	},
@@ -151,4 +242,20 @@ return {
 			-- vim.cmd.colorscheme("sonokai")
 		end,
 	},
+
+    -- catppuccin
+    {
+        "catppuccin/nvim",
+        name = "catppuccin",
+        priority = 1000,
+        config = function ()
+			local ok, catppuccin = pcall(require, "catppuccin")
+			if not ok then
+				return
+			end
+
+            catppuccin.setup(catppuccin_opts)
+            vim.cmd.colorscheme("catppuccin-mocha")
+        end
+    }
 }

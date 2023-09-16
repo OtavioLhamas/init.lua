@@ -23,7 +23,6 @@ local winbar_filetype_exclude = {
 	"notify",
 	"noice",
 	"neotest-summary",
-	"",
 }
 
 local get_navic = function()
