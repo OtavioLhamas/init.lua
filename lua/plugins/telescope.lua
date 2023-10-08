@@ -674,7 +674,7 @@ return {
 			local telescope = require("telescope")
 			telescope.setup(telescope_opts())
 
-            if not vim.fn.has('windows') then
+            if not vim.loop.os_uname().sysname == "Windows" then
                 telescope.load_extension("fzf")
             end
 			telescope.load_extension("undo")

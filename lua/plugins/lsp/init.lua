@@ -72,7 +72,7 @@ end
 --#region cmd
 
 --#region omnisharp
-if vim.fn.has("windows") then
+if vim.loop.os_uname().sysname == "Windows" then
 
 	lsp_cmd.omnisharp = {
 		"dotnet",
