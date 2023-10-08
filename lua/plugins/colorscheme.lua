@@ -66,7 +66,7 @@ local tokyo_opts = {
 
 --#region monokai-pro
 local monokai_opts = {
-	transparent_background = false,
+	transparent_background = true,
 	terminal_colors = true,
 	devicons = true, -- highlight the icons of `nvim-web-devicons`
 	styles = {
@@ -145,6 +145,10 @@ local catppuccin_opts = {
                 },
 
                 NvimTreeNormal = {
+                    bg = "NONE",
+                },
+
+                NormalFloat = {
                     bg = mocha.mantle,
                 },
 
@@ -152,6 +156,20 @@ local catppuccin_opts = {
                     bg = mocha.crust,
                 },
                 TelescopeBorder = {
+                    bg = mocha.crust,
+                    fg = mocha.overlay0,
+                },
+                TelescopePreviewNormal = {
+                    bg = mocha.crust,
+                },
+                TelescopePreviewBorder = {
+                    bg = mocha.crust,
+                    fg = mocha.overlay0,
+                },
+                TelescopePromptNormal = {
+                    bg = mocha.crust,
+                },
+                TelescopePromptBorder = {
                     bg = mocha.crust,
                     fg = mocha.overlay0,
                 },
