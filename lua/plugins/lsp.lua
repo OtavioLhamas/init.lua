@@ -80,6 +80,40 @@ return {
                 end,
             }
 
+            local tsserver = {
+                settings = {
+                    javascript = {
+                        format = {
+                            semicolons = "insert",
+                        },
+                        preferences = {
+                            quoteStyle = "single",
+                        },
+                    },
+                },
+            }
+
+            local vetur = {
+                settings = {
+                    vetur = {
+                        completion = {
+                            autoImport = true,
+                            tagCasing = "kebab",
+                        },
+                        format = {
+                            enable = true,
+                            options = {
+                                tabSize = 4,
+                                useTabs = false,
+                            },
+                        },
+                        experimental = {
+                            templateInterpolationService = true,
+                        },
+                    },
+                },
+            }
+
             if vim.loop.os_uname().sysname == "Windows" then
                 omnisharp.cmd = {
                     "dotnet",
@@ -95,8 +129,9 @@ return {
                 jsonls = {},
                 omnisharp = omnisharp,
                 rust_analyzer = {},
-                tsserver = {},
+                tsserver = tsserver,
                 yamlls = {},
+                vuels = vetur,
             })
         end,
     },
