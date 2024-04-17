@@ -6,6 +6,7 @@ return {
         init = function()
             vim.opt.foldlevel = 99
             vim.opt.foldlevelstart = 99
+            vim.opt.foldenable = true
         end,
         opts = {
             provider_selector = function(_, ft, _)
@@ -18,7 +19,10 @@ return {
                     return { "lsp", "indent" }
                 end
             end,
-            close_fold_kinds = { "imports" },
+            close_fold_kinds_for_ft = {
+                default = { "imports", "region" },
+                lua = {},
+            },
             open_fold_hl_timeout = 500,
         },
     },
