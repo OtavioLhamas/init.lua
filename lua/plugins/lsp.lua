@@ -58,13 +58,23 @@ return {
             opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities, setup_capabilities())
 
             local omnisharp = {
-                enable_editorconfig_support = true,
-                enable_ms_build_load_projects_on_demand = false,
-                enable_roslyn_analyzers = false,
-                organize_imports_on_format = true,
-                enable_import_completion = true,
-                sdk_include_prereleases = true,
-                analyze_open_documents_only = false,
+                settings = {
+                    FormattingOptions = {
+                        EnableEditorConfigSupport = true,
+                        OrganizeImports = true,
+                    },
+                    MsBuild = {
+                        LoadProjectsOnDemand = nil,
+                    },
+                    RoslynExtensionsOptions = {
+                        EnableAnalyzersSupport = true,
+                        EnableImportCompletion = true,
+                        AnalyzeOpenDocumentsOnly = nil,
+                    },
+                    Sdk = {
+                        IncludePrereleases = true,
+                    },
+                },
                 on_attach = function(_, bufnr)
                     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
                 end,
