@@ -80,6 +80,15 @@ return {
                 end,
             }
 
+            local volar = {
+                filetypes = { 'vue' },
+                init_options = {
+                    vue = {
+                        hybridMode = false
+                    }
+                }
+            }
+
             local tsserver = {
                 settings = {
                     javascript = {
@@ -88,27 +97,6 @@ return {
                         },
                         preferences = {
                             quoteStyle = "single",
-                        },
-                    },
-                },
-            }
-
-            local vetur = {
-                settings = {
-                    vetur = {
-                        completion = {
-                            autoImport = true,
-                            tagCasing = "kebab",
-                        },
-                        format = {
-                            enable = true,
-                            options = {
-                                tabSize = 4,
-                                useTabs = false,
-                            },
-                        },
-                        experimental = {
-                            templateInterpolationService = true,
                         },
                     },
                 },
@@ -129,9 +117,9 @@ return {
                 jsonls = {},
                 omnisharp = omnisharp,
                 rust_analyzer = {},
+                volar = volar,
                 tsserver = tsserver,
                 yamlls = {},
-                vuels = vetur,
             })
         end,
     },
