@@ -131,44 +131,42 @@ local get_navic = function()
 end
 
 return {
-    {
-        "nvim-lualine/lualine.nvim",
-        opts = function(_, opts)
-            local icons = require("lazyvim.config").icons
+    "lualine.nvim",
+    opts = function(_, opts)
+        opts.options = LazyVim.merge(opts.options, {
+            component_separators = { left = "", right = "" },
+            icons_enabled = true,
+            section_separators = { left = "", right = "" },
+        })
 
-            opts.options = vim.tbl_deep_extend("force", opts.options, {
-                component_separators = { left = "", right = "" },
-                icons_enabled = true,
-                section_separators = { left = "", right = "" },
-            })
+        local icons = LazyVim.config.icons
 
-            table.insert(opts.sections.lualine_b, {
-                "diff",
-                symbols = {
-                    added = icons.git.added,
-                    modified = icons.git.modified,
-                    removed = icons.git.removed,
+        -- move git diff from section x to b
+        table.remove(opts.sections.lualine_x, #opts.sections.lualine_x)
+
+        table.insert(opts.sections.lualine_b, {
+            "diff",
+            symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+            },
+        })
+
+        -- move navic from section c to winbar
+        table.remove(opts.sections.lualine_c, #opts.sections.lualine_c)
+        opts.winbar = LazyVim.merge(opts.winbar, {
+            lualine_a = {
+                {
+                    function()
+                        return get_navic()
+                    end,
+                    cond = function()
+                        return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
+                    end,
+                    draw_empty = true,
                 },
-            })
-            -- remove git diff from lualine_x
-            table.remove(opts.sections.lualine_x, #opts.sections.lualine_x)
-
-            opts.winbar = {
-                lualine_a = {
-                    {
-                        function()
-                            return get_navic()
-                        end,
-                        cond = function()
-                            return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-                        end,
-                        draw_empty = true,
-                    },
-                },
-            }
-
-            -- remove navic from lualine_c
-            table.remove(opts.sections.lualine_c, #opts.sections.lualine_c)
-        end,
-    },
+            },
+        })
+    end,
 }

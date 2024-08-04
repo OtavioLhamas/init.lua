@@ -1,16 +1,11 @@
 return {
-    {
-        "ahmedkhalf/project.nvim",
-        opts = function (_, opts)
-            opts.patterns = vim.list_extend(opts.patterns or {}, {
-                ".git",
-                "*.sln",
-                "Makefile",
-                "package.json"
-            })
+    "project.nvim",
+    opts = function(_, opts)
+        opts.patterns = LazyVim.merge(opts.patterns or {}, {
+            "*.sln",
+            "package.json",
+        })
 
-            return opts
-        end
-
-    }
+        return opts
+    end,
 }
