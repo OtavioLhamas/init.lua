@@ -19,8 +19,6 @@ return {
         end
         opts.capabilities = LazyVim.merge(opts.capabilities, lsp_capabilities)
 
-        opts.codelens = LazyVim.merge(opts.codelens, { enabled = true })
-
         opts.diagnostics = LazyVim.merge(opts.diagnostics, {
             float = {
                 border = {
