@@ -1,135 +1,3 @@
-local winbar_filetype_exclude = {
-    "help",
-    "startify",
-    "dashboard",
-    "lazy",
-    "neo-tree",
-    "neogitstatus",
-    "NvimTree",
-    "Trouble",
-    "alpha",
-    "lir",
-    "Outline",
-    "spectre_panel",
-    "toggleterm",
-    "DressingSelect",
-    "Jaq",
-    "harpoon",
-    "dap-repl",
-    "dap-terminal",
-    "dapui_console",
-    "dapui_hover",
-    "lab",
-    "notify",
-    "noice",
-    "neotest-summary",
-}
-
-local get_navic = function()
-    if vim.tbl_contains(winbar_filetype_exclude or {}, vim.bo.filetype) then
-        return ""
-    end
-
-    local navic_ok, navic = pcall(require, "nvim-navic")
-    if not navic_ok then
-        return ""
-    end
-
-    if not navic.is_available() then
-        return ""
-    end
-
-    local data = navic.get_data()
-
-    if data == nil then
-        return ""
-    end
-
-    local lib = require("nvim-navic.lib")
-    local plugin = require("lazy.core.config").spec.plugins["nvim-navic"]
-    local navic_opts = require("lazy.core.plugin").values(plugin, "opts", false)
-
-    local location = {}
-
-    local function add_hl(kind, name, line)
-        return "%#NavicIcons"
-            .. lib.adapt_lsp_num_to_str(kind)
-            .. "#"
-            .. navic_opts.icons[lib.adapt_lsp_num_to_str(kind)]
-            .. "%*%#LineNr#"
-            .. line
-            .. "%* %#NavicText#"
-            .. name
-            .. "%*"
-    end
-
-    if navic_opts.click then
-        _G.navic_click_handler = function(minwid, cnt, _, _)
-            vim.cmd("normal! m'")
-            vim.api.nvim_win_set_cursor(0, {
-                data[minwid].scope["start"].line,
-                data[minwid].scope["start"].character,
-            })
-            if cnt > 1 then
-                local ok, navbuddy = pcall(require, "nvim-navbuddy")
-                if ok then
-                    navbuddy.open(bufnr)
-                else
-                    vim.notify("nvim-navic: Double click requires nvim-navbuddy to be installed.", vim.log.levels.WARN)
-                end
-            end
-        end
-    end
-
-    local function add_click(level, component)
-        return "%" .. level .. "@v:lua.navic_click_handler@" .. component .. "%X"
-    end
-
-    for i, v in ipairs(data) do
-        local name = ""
-
-        if navic_opts.safe_output then
-            name = string.gsub(v.name, "%%", "%%%%")
-            name = string.gsub(name, "\n", " ")
-        else
-            name = v.name
-        end
-
-        local component
-
-        if navic_opts.highlight then
-            component = add_hl(v.kind, name, v.scope.start.line)
-        else
-            component = v.icon .. name
-        end
-
-        if navic_opts.click then
-            component = add_click(i, component)
-        end
-
-        table.insert(location, component)
-    end
-
-    if navic_opts.depth_limit ~= 0 and #location > navic_opts.depth_limit then
-        location = vim.list_slice(location, #location - navic_opts.depth_limit + 1, #location)
-        if navic_opts.highlight then
-            table.insert(location, 1, "%#NavicSeparator#" .. navic_opts.depth_limit_indicator .. "%*")
-        else
-            table.insert(location, 1, navic_opts.depth_limit_indicator)
-        end
-    end
-
-    local ret = ""
-
-    if navic_opts.highlight then
-        ret = table.concat(location, "%#NavicSeparator#" .. navic_opts.separator .. "%*")
-    else
-        ret = table.concat(location, navic_opts.separator)
-    end
-
-    return ret
-end
-
 return {
     "lualine.nvim",
     opts = function(_, opts)
@@ -151,22 +19,94 @@ return {
                 modified = icons.git.modified,
                 removed = icons.git.removed,
             },
+            source = function()
+                local gitsigns = vim.b.gitsigns_status_dict
+                if gitsigns then
+                    return {
+                        added = gitsigns.added,
+                        modified = gitsigns.changed,
+                        removed = gitsigns.removed,
+                    }
+                end
+            end,
         })
 
-        -- move navic from section c to winbar
+        -- A separator is mandatory so we can manipulate the string later in the fmt option
+        -- WARN: for some reason if the separator has whitespaces, they get duplicate when table.concat(result, sep) is called
+        local sep = ">"
+        local exact = true
+
         table.remove(opts.sections.lualine_c, #opts.sections.lualine_c)
-        opts.winbar = LazyVim.merge(opts.winbar, {
-            lualine_a = {
-                {
-                    function()
-                        return get_navic()
-                    end,
-                    cond = function()
-                        return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
-                    end,
-                    draw_empty = true,
-                },
-            },
+        table.insert(opts.sections.lualine_c, {
+            "aerial",
+            sep = sep, -- separator between symbols
+            sep_icon = "", -- separator between icon and symbol
+
+            -- The number of symbols to render top-down. In order to render only 'N' last
+            -- symbols, negative numbers may be supplied. For instance, 'depth = -1' can
+            -- be used in order to render only current symbol.
+            depth = 5,
+
+            -- When 'dense' mode is on, icons are not rendered near their symbols. Only
+            -- a single icon that represents the kind of current symbol is rendered at
+            -- the beginning of status line.
+            dense = false,
+
+            -- The separator to be used to separate symbols in dense mode.
+            dense_sep = ".",
+
+            -- Color the symbol icons.
+            colored = true,
+
+            exact = exact,
+
+            fmt = function (status, _)
+                local aerial_ok, aerial = pcall(require, "aerial")
+                if not aerial_ok then
+                    return ""
+                end
+
+                local data = aerial.get_location(exact)
+
+                if data == nil then
+                    return ""
+                end
+
+                _G.aerial_line_click = function(minwid)
+                    vim.cmd("normal! m'")
+                    vim.api.nvim_win_set_cursor(0, {
+                        data[minwid].lnum,
+                        data[minwid].col
+                    })
+                end
+
+                local symbols = {}
+                -- Grab the string for each symbol
+                for part in status:gmatch('([^'..sep:gsub("%s+", "")..']+)') do
+                    table.insert(symbols, part)
+                end
+
+                -- Adds the "%" .. index .. "@v:lua.aerial_line_click@" string at the start of each symbol,
+                -- which calls the function aerial_line_click passing the position of the symbol as the first parameter
+                ---@param index integer position of the symbol as displayed in the lualine
+                ---@param part string the symbol string
+                ---@return string
+                local function add_click(index, part)
+                    return "%" .. index .. "@v:lua.aerial_line_click@" .. part .. "%X"
+                end
+
+                -- create a second table and iterate again using ipairs, so we can have access to the index of the symbol
+                local ret = {}
+                for index, value in ipairs(symbols) do
+                    -- add the "[line number]" string after the first space (aka the icon) with the LineNr highlight color
+                    local s = value:gsub("%s", " %%#LineNr#%[" .. data[index].lnum .. "%] ", 1)
+                    table.insert(ret, add_click(index, s))
+                end
+
+                -- manually add the separator spaces back again
+                return table.concat(ret, " " .. sep .. " ")
+            end
         })
     end,
 }
+

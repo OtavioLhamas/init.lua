@@ -1,11 +1,9 @@
 return {
     "nvim-lspconfig",
-    init = function()
-        local keys = require("lazyvim.plugins.lsp.keymaps").get()
-        keys[#keys + 1] = { "gl", vim.diagnostic.open_float, desc = "Line Diagnosctics" }
-    end,
     opts = function(_, opts)
-        local border = require("util").icons.border
+        local keys = require("lazyvim.plugins.lsp.keymaps").get()
+
+        keys[#keys + 1] = { "gl", vim.diagnostic.open_float, desc = "Line Diagnosctics" }
 
         -- configure lsp to use nvim-ufo folding
         local lsp_capabilities = {}
@@ -19,21 +17,12 @@ return {
         end
         opts.capabilities = LazyVim.merge(opts.capabilities, lsp_capabilities)
 
-        opts.codelens = LazyVim.merge(opts.codelens, { enabled = true })
+        opts.codelens = LazyVim.merge(opts.codelens, { enabled = false })
 
         opts.diagnostics = LazyVim.merge(opts.diagnostics, {
             float = {
-                border = {
-                    border.thin.top_left,
-                    border.thin.top,
-                    border.thin.top_right,
-                    border.thin.right,
-                    border.thin.bottom_right,
-                    border.thin.bottom,
-                    border.thin.bottom_left,
-                    border.thin.left,
-                },
-                focusable = false,
+                border = "rounded",
+                focusable = true,
                 header = "",
                 prefix = "",
                 severity_sort = true,
@@ -52,3 +41,4 @@ return {
         return opts
     end,
 }
+

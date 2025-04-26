@@ -1,7 +1,7 @@
 return {
     "nvim-treesitter",
     opts = function(_, opts)
-        table.insert(opts.ensure_installed, {
+        opts.ensure_installed = LazyVim.merge(opts.ensure_installed, {
             "c_sharp",
             "rust",
         })
@@ -16,3 +16,4 @@ return {
         return opts
     end,
 }
+

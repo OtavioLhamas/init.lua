@@ -4,3 +4,4 @@ return {
     keys = { "gS", desc = "Toggle Splitjoin" },
     opts = {},
 }
+
