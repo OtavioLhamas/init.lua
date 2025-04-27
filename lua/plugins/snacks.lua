@@ -12,13 +12,16 @@ return {
         },
         opts = {
             animate = { enabled = false },
+            -- Doesn't work on Wezterm Windows 11
             image = {
                 enabled = true,
                 force = true,
                 doc = {
                     -- render the image in a floating window
                     -- only used if `opts.inline` is disabled
-                    float = true,
+                    float = false, -- many visual bugs on markdown files (Wezterm Linux)
+                    max_width = 60,
+                    max_height = 30,
                 },
                 img_dirs = { "img", "images", "assets", "static", "public", "media", "attachments" },
                 -- window options applied to windows displaying image buffers
@@ -36,13 +39,13 @@ return {
                 },
                 cache = vim.fn.stdpath("cache") .. "/snacks/image",
                 debug = {
-                    request = true,
-                    convert = true,
-                    placement = true,
+                    request = false,
+                    convert = false,
+                    placement = false,
                 },
                 math = {
-                    enabled = false
-                }
+                    enabled = false,
+                },
             },
             indent = {
                 scope = {
