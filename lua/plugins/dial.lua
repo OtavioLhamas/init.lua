@@ -1,6 +1,6 @@
 return {
     "dial.nvim",
-    opts = function(_, opts)
+    opts = function()
         local augend = require("dial.augend")
 
         local numeros_ordinarios = augend.constant.new({
@@ -16,7 +16,24 @@ return {
                 "nono",
                 "décimo",
             },
-            word = false,
+            word = true,
+            cyclic = true,
+        })
+
+        local numeros_ordinarias = augend.constant.new({
+            elements = {
+                "primeira",
+                "segunda",
+                "terceira",
+                "quarta",
+                "quinta",
+                "sexta",
+                "sétima",
+                "oitava",
+                "nona",
+                "décima",
+            },
+            word = true,
             cyclic = true,
         })
 
@@ -53,37 +70,33 @@ return {
             cyclic = true,
         })
 
-        local logical_alias = augend.constant.new({
-            elements = { "&&", "||" },
-            word = false,
-            cyclic = true,
-        })
-
-        opts.dials_by_ft = LazyVim.merge(opts.dials_by_ft, {
-            cs = "cs",
-        })
-
-        opts.groups.default = LazyVim.merge(opts.groups.default, {
-            numeros_ordinarios,
-            dias_semana,
-            meses,
-        })
-
-        opts.groups.cs = {
-            augend.integer.alias.decimal,
-            augend.constant.alias.bool,
-            augend.constant.new({ elements = { "var", "const" } }),
-            augend.constant.new({ elements = { "public", "private" } }),
-            logical_alias
+        return {
+            dials_by_ft = {
+                cs = "cs",
+            },
+            groups = {
+                default = {
+                    numeros_ordinarios,
+                    numeros_ordinarias,
+                    dias_semana,
+                    meses,
+                    augend.constant.alias.bool,
+                    augend.constant.new({
+                        elements = { "and", "or" },
+                        word = true, -- if false, "sand" is incremented into "sor", "doctor" into "doctand", etc.
+                        cyclic = true, -- "or" is incremented into "and".
+                    }),
+                    augend.constant.new({
+                        elements = { "&&", "||" },
+                        word = false,
+                        cyclic = true,
+                    }),
+                },
+                cs = {
+                    augend.constant.new({ elements = { "var", "const" } }),
+                    augend.constant.new({ elements = { "public", "private" } }),
+                },
+            },
         }
-
-        opts.groups.markdown = LazyVim.merge(opts.groups.markdown, {
-            numeros_ordinarios,
-            dias_semana,
-            meses,
-        })
-
-        return opts
     end,
 }
-

@@ -5,7 +5,9 @@ Refer to the [documentation](https://lazyvim.github.io/installation) to get star
 
 ## TODO
 
-- [ ] Explore [edgy](https://github.com/folke/edgy.nvim) setups
+- [ ] Floating windows borders
+- [ ] Fix snacks image rendering
+
 
 Pre-configured language extras that I might need to tweak:
 
@@ -15,6 +17,7 @@ Pre-configured language extras that I might need to tweak:
 - [ ] Rust
 - [ ] Typescript
 - [ ] Vue
+- [ ] Markdown
 
 ### Learn and explore the configuration for the following installed plugins:
 - [ ] [conform](https://github.com/stevearc/conform.nvim) code formatter

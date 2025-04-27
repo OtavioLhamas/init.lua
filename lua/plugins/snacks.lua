@@ -2,10 +2,48 @@ return {
     {
         "snacks.nvim",
         keys = {
-            { "<leader>sz", function() Snacks.picker.zoxide() end, desc = "Zoxide" },
+            {
+                "<leader>sz",
+                function()
+                    Snacks.picker.zoxide()
+                end,
+                desc = "Zoxide",
+            },
         },
         opts = {
             animate = { enabled = false },
+            image = {
+                enabled = true,
+                force = true,
+                doc = {
+                    -- render the image in a floating window
+                    -- only used if `opts.inline` is disabled
+                    float = true,
+                },
+                img_dirs = { "img", "images", "assets", "static", "public", "media", "attachments" },
+                -- window options applied to windows displaying image buffers
+                -- an image buffer is a buffer with `filetype=image`
+                wo = {
+                    wrap = false,
+                    number = false,
+                    relativenumber = false,
+                    cursorcolumn = false,
+                    signcolumn = "no",
+                    foldcolumn = "0",
+                    list = false,
+                    spell = false,
+                    statuscolumn = "",
+                },
+                cache = vim.fn.stdpath("cache") .. "/snacks/image",
+                debug = {
+                    request = true,
+                    convert = true,
+                    placement = true,
+                },
+                math = {
+                    enabled = false
+                }
+            },
             indent = {
                 scope = {
                     hl = {
@@ -24,7 +62,7 @@ return {
                 layouts = {
                     select_colorscheme = {
                         layout = {
-                            relative = 'cursor',
+                            relative = "cursor",
                             width = 0.4,
                             min_width = 0,
                             row = 1,
@@ -44,19 +82,19 @@ return {
                 sources = {
                     colorschemes = {
                         layout = {
-                            preset = 'select_colorscheme',
-                            preview = 'colorscheme'
+                            preset = "select_colorscheme",
+                            preview = "colorscheme",
                         },
                     },
                     command_history = {
                         layout = {
                             preview = false,
-                            preset = "dropdown"
+                            preset = "dropdown",
                         },
                     },
                     diagnostics_buffer = {
                         -- Same as Snacks.picker.format.diagnostic(), but removes the file name at the end
-                        format = function (item, picker)
+                        format = function(item, picker)
                             local ret = {} ---@type snacks.picker.Highlight[]
                             local diag = item.item ---@type vim.Diagnostic
                             if item.severity then
@@ -86,25 +124,25 @@ return {
                         win = {
                             list = {
                                 wo = {
-                                    relativenumber = true
-                                }
-                            }
-                        }
+                                    relativenumber = true,
+                                },
+                            },
+                        },
                     },
                     files = {
                         hidden = true,
-                        ignored = true
+                        ignored = true,
                     },
                     lsp_workspace_symbols = {
                         formatters = {
                             file = {
-                                filename_first = true
-                            }
-                        }
+                                filename_first = true,
+                            },
+                        },
                     },
-                }
+                },
             },
             scroll = { enabled = false },
-        }
-    }
+        },
+    },
 }

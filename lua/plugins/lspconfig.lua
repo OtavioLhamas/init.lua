@@ -36,8 +36,6 @@ return {
             },
         })
 
-        -- TODO: configure LSP servers as needed
-
         return opts
     end,
 }
