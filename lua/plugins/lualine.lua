@@ -11,6 +11,7 @@ return {
 
         -- move git diff from section x to b
         table.remove(opts.sections.lualine_x, #opts.sections.lualine_x)
+        table.insert(opts.sections.lualine_x, { "g:obsidian" })
 
         table.insert(opts.sections.lualine_b, {
             "diff",
