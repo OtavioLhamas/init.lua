@@ -7,7 +7,17 @@ vim.g.autoformat = false
 vim.g.snacks_animate = false
 vim.g.lazyvim_prettier_needs_config = true
 
-vim.o.shell = "powershell.exe"
+if LazyVim.is_win() then
+    -- Try to get PowerShell version, redirecting stderr to null
+    local powershell_version_output = vim.fn.system('powershell.exe -Command "$PSVersionTable.PSVersion.Major" 2>$null')
+
+    -- Trim whitespace and newlines from the output
+    local major_version = string.match(powershell_version_output, "^%s*(%d+)%s*$")
+
+    vim.o.shell = (major_version and tonumber(major_version) >= 7) and "pwsh.exe" or "powershell.exe"
+else
+    vim.o.shell = "fish"
+end
 
 local opt = vim.opt
 local b = vim.b
