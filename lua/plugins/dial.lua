@@ -1,6 +1,6 @@
 return {
     "dial.nvim",
-    opts = function()
+    opts = function(_, opts)
         local augend = require("dial.augend")
 
         local numeros_ordinarios = augend.constant.new({
@@ -70,33 +70,28 @@ return {
             cyclic = true,
         })
 
-        return {
-            dials_by_ft = {
-                cs = "cs",
-            },
-            groups = {
-                default = {
-                    numeros_ordinarios,
-                    numeros_ordinarias,
-                    dias_semana,
-                    meses,
-                    augend.constant.alias.bool,
-                    augend.constant.new({
-                        elements = { "and", "or" },
-                        word = true, -- if false, "sand" is incremented into "sor", "doctor" into "doctand", etc.
-                        cyclic = true, -- "or" is incremented into "and".
-                    }),
-                    augend.constant.new({
-                        elements = { "&&", "||" },
-                        word = false,
-                        cyclic = true,
-                    }),
-                },
-                cs = {
-                    augend.constant.new({ elements = { "var", "const" } }),
-                    augend.constant.new({ elements = { "public", "private" } }),
-                },
-            },
+        table.insert(opts.groups.default, numeros_ordinarios)
+        table.insert(opts.groups.default, numeros_ordinarias)
+        table.insert(opts.groups.default, dias_semana)
+        table.insert(opts.groups.default, meses)
+        table.insert(
+            opts.groups.default,
+            augend.constant.new({
+                elements = { "and", "or" },
+                word = true, -- if false, "sand" is incremented into "sor", "doctor" into "doctand", etc.
+                cyclic = true, -- "or" is incremented into "and".
+            })
+        )
+        table.insert(opts.groups.default, augend.date.alias["%Y-%m-%d"])
+        table.insert(opts.groups.default, augend.date.alias["%d/%m/%Y"])
+
+        opts.groups.cs = {
+            augend.constant.new({ elements = { "var", "const" } }),
+            augend.constant.new({ elements = { "public", "private" } }),
         }
+
+        opts.dials_by_ft.cs = "cs"
+
+        return opts
     end,
 }
