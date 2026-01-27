@@ -2,8 +2,23 @@ return {
     "nvim-treesitter",
     opts = function(_, opts)
         opts.ensure_installed = LazyVim.merge(opts.ensure_installed, {
-            "c_sharp",
-            "rust",
+            "css",
+            "scss",
+
+            "fish",
+
+            "groovy",
+
+            "html",
+
+            "jinja",
+
+            "powershell",
+
+            "bash",
+
+            "xml",
+
         })
 
         vim.filetype.add({
