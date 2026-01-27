@@ -14,6 +14,7 @@ return {
         "BufNewFile " .. vim.fn.expand("~") .. "\\Documents\\Obsidian\\*.md",
     },
     keys = {
+        { "<leader>o", "", desc = "Obsidian" },
         { "<leader>so", "<cmd>ObsidianSearch<cr>", desc = "Obsidian (cwd)" },
         { "<leader>sO", "<cmd>ObsidianWorkspace<cr>", desc = "Obsidian Workspaces" },
         { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search Notes (cwd)" },
