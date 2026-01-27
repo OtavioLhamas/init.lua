@@ -1,3 +1,10 @@
+-- TODO: setup linux path
+local vault_path = ""
+
+if LazyVim.is_win() then
+    vault_path = "G:\\Obsidian"
+end
+
 return {
     "obsidian-nvim/obsidian.nvim",
     version = "*", --   "obsidian-nvim/obsidian.nvim",recommended, use latest release instead of latest commit
@@ -9,9 +16,9 @@ return {
         -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
         -- refer to `:h file-pattern` for more examples
         "BufReadPre "
-            .. vim.fn.expand("~")
-            .. "\\Documents\\Obsidian\\*.md",
-        "BufNewFile " .. vim.fn.expand("~") .. "\\Documents\\Obsidian\\*.md",
+            .. vault_path
+            .. "\\*.md",
+        "BufNewFile " .. vault_path .. "\\*.md",
     },
     keys = {
         { "<leader>o", "", desc = "Obsidian" },
@@ -30,11 +37,11 @@ return {
         workspaces = {
             {
                 name = "personal",
-                path = "~/Documents/Obsidian/Personal",
+                path = vault_path .. "/Personal",
             },
             {
                 name = "rpg",
-                path = "~/Documents/Obsidian/RPG",
+                path = vault_path .. "/RPG",
             },
         },
 
