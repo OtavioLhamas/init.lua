@@ -1,5 +1,5 @@
 return {
-    "echasnovski/mini.splitjoin",
+    "nvim-mini/mini.splitjoin",
     version = false,
     keys = { "gS", desc = "Toggle Splitjoin" },
     opts = {},
