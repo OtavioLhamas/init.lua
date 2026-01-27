@@ -9,6 +9,8 @@ return {
             highlight_overrides = {
                 mocha = function(colors)
                     return {
+                        SnacksPickerBorder = { fg = "#89DCEB", bg = "#181825" },
+
                         SnacksNotifierDebug = { fg = "#FAB387", bg = "#181825" },
                         SnacksNotifierError = { fg = "#F38BA8", bg = "#181825" },
                         SnacksNotifierTrace = { fg = "#F5E0DC", bg = "#181825" },
