@@ -1,151 +1,105 @@
 return {
-    {
-        "snacks.nvim",
-        keys = {
-            {
-                "<leader>sz",
-                function()
-                    Snacks.picker.zoxide()
-                end,
-                desc = "Zoxide",
+    "snacks.nvim",
+    keys = {
+        {
+            "<leader>sz",
+            function()
+                Snacks.picker.zoxide()
+            end,
+            desc = "Zoxide",
+        },
+    },
+    opts = {
+
+        animate = { enabled = false },
+
+        explorer = {
+            replace_netrw = false, -- don't auto open when starting nvim with a directory
+        },
+
+        --#region Image preview
+        image = {
+            -- TODO: test on linux
+            enabled = not LazyVim.is_win(), -- doesn't work with WezTerm on Windows 11
+        },
+        --#endregion
+
+        --#region Indent guides and scopes
+        indent = {
+            scope = {
+                hl = {
+                    "SnacksIndent1",
+                    "SnacksIndent2",
+                    "SnacksIndent3",
+                    "SnacksIndent4",
+                    "SnacksIndent5",
+                    "SnacksIndent6",
+                    "SnacksIndent7",
+                    "SnacksIndent8",
+                    "SnacksIndent9",
+                },
             },
         },
-        opts = {
-            animate = { enabled = false },
-            -- Doesn't work on Wezterm Windows 11
-            image = {
-                enabled = true,
-                force = true,
-                doc = {
-                    -- render the image in a floating window
-                    -- only used if `opts.inline` is disabled
-                    float = false, -- many visual bugs on markdown files (Wezterm Linux)
-                    max_width = 60,
-                    max_height = 30,
-                },
-                img_dirs = { "img", "images", "assets", "static", "public", "media", "attachments" },
-                -- window options applied to windows displaying image buffers
-                -- an image buffer is a buffer with `filetype=image`
-                wo = {
-                    wrap = false,
-                    number = false,
-                    relativenumber = false,
-                    cursorcolumn = false,
-                    signcolumn = "no",
-                    foldcolumn = "0",
-                    list = false,
-                    spell = false,
-                    statuscolumn = "",
-                },
-                cache = vim.fn.stdpath("cache") .. "/snacks/image",
-                debug = {
-                    request = false,
-                    convert = false,
-                    placement = false,
-                },
-                math = {
-                    enabled = false,
-                },
-            },
-            indent = {
-                scope = {
-                    hl = {
-                        "SnacksIndent1",
-                        "SnacksIndent2",
-                        "SnacksIndent3",
-                        "SnacksIndent4",
-                        "SnacksIndent5",
-                        "SnacksIndent6",
-                        "SnacksIndent7",
-                        "SnacksIndent8",
+        --#endregion
+
+        --#region Picker
+        picker = {
+            --#region Picker custom layouts
+            layouts = {
+                select_colorscheme = {
+                    layout = {
+                        relative = "cursor",
+                        width = 0.4,
+                        min_width = 0,
+                        row = 1,
+                        backdrop = false,
+                        height = 0.5,
+                        min_height = 3,
+                        box = "vertical",
+                        title = "{title}",
+                        title_pos = "center",
+                        { win = "input", height = 1, border = "bottom" },
+                        { win = "list", border = "none" },
+                        { win = "preview", title = "{preview}", height = 0.2, border = "top" },
                     },
                 },
             },
-            picker = {
-                layouts = {
-                    select_colorscheme = {
-                        layout = {
-                            relative = "cursor",
-                            width = 0.4,
-                            min_width = 0,
-                            row = 1,
-                            backdrop = false,
-                            height = 0.5,
-                            min_height = 3,
-                            box = "vertical",
-                            border = "rounded",
-                            title = "{title}",
-                            title_pos = "center",
-                            { win = "input", height = 1, border = "bottom" },
-                            { win = "list", border = "none" },
-                            { win = "preview", title = "{preview}", height = 0.2, border = "top" },
-                        },
+            --#endregion
+
+            --#region Picker sources
+            sources = {
+                colorschemes = {
+                    layout = {
+                        preset = "select_colorscheme",
+                        preview = "colorscheme",
                     },
                 },
-                sources = {
-                    colorschemes = {
-                        layout = {
-                            preset = "select_colorscheme",
-                            preview = "colorscheme",
-                        },
+                command_history = {
+                    layout = {
+                        preview = false,
+                        preset = "dropdown",
                     },
-                    command_history = {
-                        layout = {
-                            preview = false,
-                            preset = "dropdown",
-                        },
-                    },
-                    diagnostics_buffer = {
-                        -- Same as Snacks.picker.format.diagnostic(), but removes the file name at the end
-                        format = function(item, picker)
-                            local ret = {} ---@type snacks.picker.Highlight[]
-                            local diag = item.item ---@type vim.Diagnostic
-                            if item.severity then
-                                vim.list_extend(ret, Snacks.picker.format.severity(item, picker))
-                            end
-
-                            local message = diag.message
-                            ret[#ret + 1] = { message }
-                            Snacks.picker.highlight.markdown(ret)
-                            ret[#ret + 1] = { " " }
-
-                            if diag.source then
-                                ret[#ret + 1] = { diag.source, "SnacksPickerDiagnosticSource" }
-                                ret[#ret + 1] = { " " }
-                            end
-
-                            if diag.code then
-                                ret[#ret + 1] = { ("(%s)"):format(diag.code), "SnacksPickerDiagnosticCode" }
-                                ret[#ret + 1] = { " " }
-                            end
-                            return ret
-                        end,
-                    },
-                    explorer = {
-                        hidden = true,
-                        ignored = true,
-                        win = {
-                            list = {
-                                wo = {
-                                    relativenumber = true,
-                                },
-                            },
-                        },
-                    },
-                    files = {
-                        hidden = true,
-                        ignored = true,
-                    },
-                    lsp_workspace_symbols = {
-                        formatters = {
-                            file = {
-                                filename_first = true,
+                },
+                explorer = {
+                    hidden = true,
+                    ignored = true,
+                    win = {
+                        list = {
+                            wo = {
+                                relativenumber = true,
                             },
                         },
                     },
                 },
+                files = {
+                    hidden = true,
+                    ignored = true,
+                },
             },
-            scroll = { enabled = false },
+            --#endregion
         },
+        --#endregion
+
+        scroll = { enabled = false },
     },
 }
