@@ -4,18 +4,12 @@ return {
         opts = {
             term_colors = true,
             transparent_background = true,
+            float = {
+                solid = vim.o.winborder == "solid",
+            },
             highlight_overrides = {
                 mocha = function(mocha)
                     return {
-                        BlinkCmpMenu = {
-                            link = "NormalFloat"
-                        },
-                        BlinkCmpMenuBorder = {
-                            link = "NormalFloat"
-                        },
-                        BlinkCmpSource = {
-                            link = "NormalFloat"
-                        },
                     }
                 end,
             },
