@@ -6,7 +6,6 @@ vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- Yank to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 -- Delete without replacing clipboard
 vim.keymap.set({ "n", "v" }, "<leader>d", [['_d]])
+
