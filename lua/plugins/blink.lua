@@ -1,90 +1,114 @@
 return {
-    'blink.cmp',
-    dependencies = {
-        "moyiz/blink-emoji.nvim",
-    },
+    "blink.cmp",
     opts = {
+        --#region cmdline
         cmdline = {
             completion = {
                 list = {
                     selection = {
-                        preselect = true,
                         auto_insert = true,
+                        preselect = false,
                     },
                 },
-                menu = { auto_show = true },
-                ghost_text = { enabled = true },
             },
+            sources = { "buffer", "cmdline", "path" },
         },
+        --#endregion
+
+        --#region Completion menu behaviour
         completion = {
             list = {
                 selection = {
-                    preselect = false,
                     auto_insert = false,
+                    preselect = false,
                 },
             },
             menu = {
-                border = 'rounded',
-                draw = {
+                draw = { -- controls the completion menu appearance
                     columns = {
-                        { 'item_idx' },
-                        { 'kind_icon', 'kind', gap = 1 },
-                        { 'label', 'label_description', gap = 1 },
-                        { 'source_name' },
+                        { "kind_icon" },
+                        { "label", "label_description", gap = 1 },
+                        { "item_idx" },
                     },
-                    components = {
+                    components = { -- custom menu components
                         item_idx = {
-                            text = function(ctx) return ctx.idx == 10 and '0' or ctx.idx >= 10 and ' ' or tostring(ctx.idx) end,
-                            highlight = 'BlinkCmpItemIdx' -- optional, only if you want to change its color
+                            highlight = "BlinkCmpItemIdx", -- optional, only if you want to change its color
+                            text = function(ctx)
+                                return ctx.idx == 10 and "0" or ctx.idx >= 10 and " " or tostring(ctx.idx)
+                            end,
                         },
-                    }
-                }
-            },
-            documentation = {
-                window = {
-                    border = 'rounded',
+                    },
                 },
+                max_height = 15,
             },
         },
+        --#endregion
+
+        --#region Fuzzy finding rules
         fuzzy = {
             implementation = "prefer_rust_with_warning",
             sorts = {
-                'exact',
-                'score',
-                'sort_text',
-                'kind'
-            }
-        },
-        keymap = {
-            preset = 'default',
-            ['<A-1>'] = { function(cmp) cmp.accept({ index = 1 }) end },
-            ['<A-2>'] = { function(cmp) cmp.accept({ index = 2 }) end },
-            ['<A-3>'] = { function(cmp) cmp.accept({ index = 3 }) end },
-            ['<A-4>'] = { function(cmp) cmp.accept({ index = 4 }) end },
-            ['<A-5>'] = { function(cmp) cmp.accept({ index = 5 }) end },
-            ['<A-6>'] = { function(cmp) cmp.accept({ index = 6 }) end },
-            ['<A-7>'] = { function(cmp) cmp.accept({ index = 7 }) end },
-            ['<A-8>'] = { function(cmp) cmp.accept({ index = 8 }) end },
-            ['<A-9>'] = { function(cmp) cmp.accept({ index = 9 }) end },
-            ['<A-0>'] = { function(cmp) cmp.accept({ index = 10 }) end },
-        },
-        signature = {
-            window = {
-                border = 'rounded',
+                "exact",
+                "score",
+                "sort_text",
+                "kind",
             },
         },
-        -- sources = {
-        --     default = {
-        --         "emoji"
-        --     },
-        --     providers = {
-        --         emoji = {
-        --             module = "blink-emoji",
-        --             name = "Emoji",
-        --             score_offset = 15, -- Tune by preference
-        --             opts = { insert = true }, -- Insert emoji (default) or complete its name
-        --         }
-        --     },
-        -- }
-    }
+        --#endregion
+
+        --#region Keymaps
+        keymap = {
+            ["<A-1>"] = {
+                function(cmp)
+                    cmp.accept({ index = 1 })
+                end,
+            },
+            ["<A-2>"] = {
+                function(cmp)
+                    cmp.accept({ index = 2 })
+                end,
+            },
+            ["<A-3>"] = {
+                function(cmp)
+                    cmp.accept({ index = 3 })
+                end,
+            },
+            ["<A-4>"] = {
+                function(cmp)
+                    cmp.accept({ index = 4 })
+                end,
+            },
+            ["<A-5>"] = {
+                function(cmp)
+                    cmp.accept({ index = 5 })
+                end,
+            },
+            ["<A-6>"] = {
+                function(cmp)
+                    cmp.accept({ index = 6 })
+                end,
+            },
+            ["<A-7>"] = {
+                function(cmp)
+                    cmp.accept({ index = 7 })
+                end,
+            },
+            ["<A-8>"] = {
+                function(cmp)
+                    cmp.accept({ index = 8 })
+                end,
+            },
+            ["<A-9>"] = {
+                function(cmp)
+                    cmp.accept({ index = 9 })
+                end,
+            },
+            ["<A-0>"] = {
+                function(cmp)
+                    cmp.accept({ index = 10 })
+                end,
+            },
+        },
+        --#endregion
+    },
 }
