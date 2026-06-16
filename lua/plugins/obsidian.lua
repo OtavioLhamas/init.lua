@@ -1,5 +1,4 @@
--- TODO: setup linux path
-local vault_path = ""
+local vault_path = "/mnt/ssd/Obsidian/"
 
 if LazyVim.is_win() then
     vault_path = "G:\\Obsidian"
