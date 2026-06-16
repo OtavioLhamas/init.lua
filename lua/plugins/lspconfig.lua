@@ -32,6 +32,19 @@ return {
                     { "gl", vim.diagnostic.open_float, desc = "Line Diagnosctics" },
                 },
             },
+
+            gopls = {
+                settings = {
+                    gopls = {
+                        templateExtensions = { "tmpl" }, -- Recognize .tmpl files
+                        ui = {
+                            diagnostic = {
+                                staticcheck = true,
+                            },
+                        },
+                    },
+                },
+            },
         },
         --#endregion
     },

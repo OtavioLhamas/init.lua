@@ -12,13 +12,15 @@ return {
             "html",
 
             "jinja",
+            "gotmpl",
+            "yaml",
+            "toml",
 
             "powershell",
 
             "bash",
 
             "xml",
-
         })
 
         vim.filetype.add({
@@ -31,4 +33,3 @@ return {
         return opts
     end,
 }
-
