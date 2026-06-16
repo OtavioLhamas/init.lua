@@ -1,5 +1,37 @@
 return {
     {
+        "rose-pine/neovim",
+        name = "rose-pine",
+        opts = {
+            variant = "main",
+            dark_variant = "main",
+            dim_inactive_windows = false,
+            extend_background_behind_borders = false,
+            styles = {
+                bold = true,
+                italic = false,
+                transparency = true,
+            },
+            enable = {
+                terminal = true,
+                legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
+                migrations = true, -- Handle deprecated options automatically
+            },
+            highlight_groups = {
+                ColorColumn = { bg = "#1C1C21" },
+                -- Normal = { bg = "#000000" }, -- Main background remains transparent
+                SnacksPickerBorder = { fg = "#9ccfd8", bg = "#191724" },
+                NormalFloat = { bg = "base" },
+                Pmenu = { bg = "#191724" }, -- Completion menu background
+                PmenuSel = { bg = "#4a465d", fg = "NONE" }, -- Highlighted completion item
+                FloatBorder = { bg = "base" },
+                FloatTitle = { bg = "base" },
+                PmenuSbar = { bg = "#191724" }, -- Scrollbar background
+                PmenuThumb = { bg = "#9ccfd8" }, -- Scrollbar thumb
+            },
+        },
+    },
+    {
         "catppuccin/nvim",
         opts = {
             flavour = "mocha",
@@ -41,7 +73,7 @@ return {
     {
         "LazyVim/LazyVim",
         opts = {
-            colorscheme = "catppuccin",
+            colorscheme = "rose-pine",
         },
     },
 }

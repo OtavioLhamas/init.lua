@@ -19,7 +19,6 @@ return {
 
         --#region Image preview
         image = {
-            -- TODO: test on linux
             enabled = not LazyVim.is_win(), -- doesn't work with WezTerm on Windows 11
         },
         --#endregion

@@ -1,6 +1,5 @@
 return {
     "noice.nvim",
-    --TODO: come back here to config inc-rename.nvim once it is enabled
     opts = {
         cmdline = {
             view = "cmdline",
